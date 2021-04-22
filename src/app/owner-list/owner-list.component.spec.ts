@@ -1,25 +1,51 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { OwnerService } from '../shared/owner/owner.service';
 
-import { OwnerListComponent } from './owner-list.component';
+@Component({
+  selector: 'app-owner-list',
+  templateUrl: './owner-list.component.html',
+  styleUrls: ['./owner-list.component.css']
+})
+export class OwnerListComponent implements OnInit {
+  tableColumns: string[] = ['dni', 'name', 'profession', 'actions'];
+  owners: Array<any> = [];
+  checkedOwners: Array<any> = [];
 
-describe('OwnerListComponent', () => {
-  let component: OwnerListComponent;
-  let fixture: ComponentFixture<OwnerListComponent>;
+  constructor(
+    private ownerService: OwnerService,
+    private router: Router
+  ) { }
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ OwnerListComponent ]
-    })
-    .compileComponents();
-  }));
+  ngOnInit() {
+    this.ownerService.getAll().subscribe(data => {
+      this.owners = data._embedded.owners.map(_owner => {
+        const href = _owner._links.self.href
+        const hrefSplit = href.split('/');
+        _owner.id = hrefSplit[hrefSplit.length - 1];
+        _owner.href = href;
+        return _owner;
+      });
+    });
+  }
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(OwnerListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  isOwnerChecked(owner: any) {
+    return this.checkedOwners.filter(_owner => _owner.id === owner.id).length > 0
+  }
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  checkOwner(owner: any, checked: boolean) {
+    if (checked) {
+      this.checkedOwners.push(owner)
+    } else {
+      this.checkedOwners.filter(_owner => _owner.id !== owner.id)
+    }
+  }
+
+  deleteCheckedOwners() {
+    this.ownerService.removeMultiple(this.checkedOwners.map(owner => owner.href)).subscribe(result => {
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['/owner-list']);
+    }, error => console.error(error));
+  }
+}

@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolbarModule, MatMenuModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolbarModule, MatMenuModule, MatTableModule, MatCheckboxModule, MatSelectModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CarEditComponent } from './car-edit/car-edit.component';
@@ -32,11 +32,15 @@ import { OwnerListComponent } from './owner-list/owner-list.component';
     BrowserAnimationsModule,
     MatButtonModule,
     MatCardModule,
-    MatMenuModule,
     MatInputModule,
     MatListModule,
     MatToolbarModule,
-    FormsModule
+    FormsModule,
+    MatTableModule,
+    MatCheckboxModule,    
+    MatSelectModule,
+    MatMenuModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

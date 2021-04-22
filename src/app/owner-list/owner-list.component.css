@@ -1,0 +1,24 @@
+.title {
+  margin: 30px;
+}
+
+table {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.list-item {
+  text-align: center;
+}
+
+.actions-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.check_delete{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
