@@ -19,13 +19,12 @@ export class OwnerEditComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe(params => {
       const id = params['id'];
       if (id) {
-        this.ownerService.get(id).subscribe((resp: any) => {
-          console.log(resp);
-          if (resp) {
-            this.owner = resp._embedded.owners[0];
-            this.owner.href = resp._embedded.owners[0]._links.self.href;
+        this.ownerService.get(id).subscribe((owner: any) => {
+          if (owner) {
+            this.owner = owner;
+            this.owner.href = owner._links.self.href;
           } else {
-            console.log(`Car with id '${id}' not found, returning to list`);
+            console.log(`Owner with id '${id}' not found, returning to list`);
             this.gotoList();
           }
         });
@@ -42,7 +41,6 @@ export class OwnerEditComponent implements OnInit, OnDestroy {
   }
 
   save(form: NgForm) {
-    console.log(form);
     this.ownerService.save(form).subscribe(result => {
       this.gotoList();
     }, error => console.error(error));

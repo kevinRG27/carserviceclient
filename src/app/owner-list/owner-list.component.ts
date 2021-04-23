@@ -9,7 +9,7 @@ import { OwnerService } from '../shared/owner/owner.service';
 })
 export class OwnerListComponent implements OnInit {
   tableColumns: string[] = ['dni', 'name', 'profession', 'actions'];
-  owners: Array<any> = [];
+  owners: Array<any>;
   checkedOwners: Array<any> = [];
 
   constructor(
@@ -18,7 +18,7 @@ export class OwnerListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.ownerService.getAll().subscribe(data => {
+    this.ownerService.getAll().subscribe((data:any) => {
       this.owners = data._embedded.owners.map(_owner => {
         const href = _owner._links.self.href
         const hrefSplit = href.split('/');

@@ -10,31 +10,24 @@ import { OwnerService } from '../shared/owner/owner.service';
 })
 export class CarListComponent implements OnInit {
   cars: Array<any>;
-  
+
   constructor(
-    private carService: CarService, 
-    private giphyService: GiphyService, 
-    private ownerService:OwnerService
-    ) { }
+    private carService: CarService,
+    private giphyService: GiphyService,
+    private ownerService: OwnerService
+  ) { }
 
   ngOnInit() {
-    this.carService.getAll().subscribe(data => {
-      this.cars = data;
-      for (const car of this.cars) {
-        this.giphyService.get(car.name).subscribe(url => car.giphyUrl = url);
-        if(car.ownerDni != null){ 
-          this.ownerService.get(car.ownerDni).subscribe((resp:any) => {
-            if(resp._embedded.owners.length!){
-              car.ownerName = resp._embedded.owners[0].name;
-            }
-            else{
-              car.ownerName = "No owner registered";
-            }
-          });
-        }
-      }
-      console.log(this.cars);
-    });
-    
+    this.ownerService.getAll().subscribe(data => {
+      const owners = data._embedded.owners;
+      this.carService.getAll().subscribe(data => {
+        this.cars = data;
+        for (const car of this.cars) {
+          this.giphyService.get(car.name).subscribe(url => car.giphyUrl = url);
+          const owner = owners.filter(owner => owner.dni === car.ownerDni);
+          car.ownerName = owner.length ? owner[0].name : '';
+        };
+      });
+    })
   }
 }
